@@ -12,14 +12,15 @@ module RestClient
 			# A hash of the headers, beautified with symbols and underscores.
 			# e.g. "Content-type" will become :content_type.
 			def headers
-				@headers ||= self.class.beautify_headers(@net_http_res.to_hash)
+				@headers ||= self.class.beautify_headers(raw_headers)
 			end
 
 		 
 			# Hash of cookies extracted from response headers
 			def cookies
-				@cookies ||= self.raw_headers['Set-Cookie'].map{|ea| ea.split('; ')}.flatten.inject({}) do |out, raw_c|
+				@cookies ||= (self.raw_headers['set-cookie'] || []).map{|ea| ea.split('; ')}.flatten.inject({}) do |out, raw_c|
 					key, val = raw_c.split('=')
+					#val = val.split(';').first
 					unless %w(expires domain path secure).member?(key)
 						out[key] = val
 					end

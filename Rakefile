@@ -10,7 +10,7 @@ end
 desc "Print specdocs"
 Spec::Rake::SpecTask.new(:doc) do |t|
 	t.spec_opts = ["--format", "specdoc", "--dry-run"]
-	t.spec_files = FileList['spec/**/_spec.rb']
+	t.spec_files = FileList['spec/**/*_spec.rb']
 end
 
 desc "Run all examples with RCov"
