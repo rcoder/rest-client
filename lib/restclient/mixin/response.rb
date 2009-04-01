@@ -15,9 +15,10 @@ module RestClient
 				@headers ||= self.class.beautify_headers(@net_http_res.to_hash)
 			end
 
+         
 			# Hash of cookies extracted from response headers
 			def cookies
-				@cookies ||= (self.headers[:set_cookie] || "").split('; ').inject({}) do |out, raw_c|
+				@cookies ||= self.raw_headers[:set_cookie].map{|ea| ea.split('; ')}.flatten.inject({}) do |out, raw_c|
 					key, val = raw_c.split('=')
 					unless %w(expires domain path secure).member?(key)
 						out[key] = val
@@ -30,11 +31,18 @@ module RestClient
 				receiver.extend(RestClient::Mixin::Response::ClassMethods)
 			end
 
+            def raw_headers
+                @raw_headers ||= @net_http_res.to_hash.inject({}) do |out, (key, array)|
+                    out[key.gsub(/-/, '_').to_sym] = array
+                    out
+                end 
+            end
+            
 			module ClassMethods
 				def beautify_headers(headers)
-					headers.inject({}) do |out, (key, value)|
-						out[key.gsub(/-/, '_').to_sym] = value.first
-					out
+					headers.inject({}) do |out, (key, array)|
+    					out[key.gsub(/-/, '_').to_sym] = array.first
+    					out
 					end
 				end
 			end

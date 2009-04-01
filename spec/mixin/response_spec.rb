@@ -40,6 +40,11 @@ describe RestClient::Mixin::Response do
 		@response.cookies.should == { 'session_id' => '1' }
 	end
 
+	it "extracts cookies from multiple set-cookie headers" do
+		@net_http_res.should_receive(:to_hash).and_return('set-cookie' => ['session_id=1; path=/', 'locale=en'])
+		@response.cookies.should == { 'session_id' => '1', 'locale' => 'en' }
+	end
+
 	it "can access the net http result directly" do
 		@response.net_http_res.should == @net_http_res
 	end
