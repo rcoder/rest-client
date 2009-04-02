@@ -18,13 +18,13 @@ module RestClient
 		 
 			# Hash of cookies extracted from response headers
 			def cookies
-        raw_cookies = self.raw_headers['set-cookie'] || []
-        # split on ';' dividers, then into an array of two-elem [key, val] arrays
-        cookie_vals = raw_cookies.map {|s| s.split(/;\s*/) }.flatten.map {|s| s.split('=') }
-        # filter out 'special' keys: expires, domain, path, secure
-        valid_cookies = cookie_vals.reject {|k,v| %w(expires domain path secure).member?(k) }
-        # return as a hash
-        return Hash[*(valid_cookies.flatten)]
+				raw_cookies = self.raw_headers['set-cookie'] || []
+				# split on ';' dividers, then into an array of two-elem [key, val] arrays
+				cookie_vals = raw_cookies.map {|s| s.split(/;\s*/) }.flatten.map {|s| s.split('=') }
+				# filter out 'special' keys: expires, domain, path, secure
+				valid_cookies = cookie_vals.reject {|k,v| %w(expires domain path secure).member?(k) }
+				# return as a hash
+				return Hash[*(valid_cookies.flatten)]
 			end
 
 			def self.included(receiver)
