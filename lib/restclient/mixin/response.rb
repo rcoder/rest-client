@@ -22,7 +22,7 @@ module RestClient
         # split on ';' dividers, then into an array of two-elem [key, val] arrays
         cookie_vals = raw_cookies.map {|s| s.split(/;\s*/) }.flatten.map {|s| s.split('=') }
         # filter out 'special' keys: expires, domain, path, secure
-        valid_cookies = cookie_vals.reject {|k,v| %w(expires domain path secure).member?(k) }
+        valid_cookies = cookie_vals.reject {|k,v| k =~ /^expires|domain|path|secure$/i }
         # return as a hash
         return Hash[*(valid_cookies.flatten)]
 			end
